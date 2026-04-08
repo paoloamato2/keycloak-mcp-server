@@ -1,6 +1,18 @@
 # Keycloak MCP Server
 
-A comprehensive MCP (Model Context Protocol) server that exposes the **entire** [Keycloak Admin REST API](https://www.keycloak.org/docs-api/latest/rest-api/index.html) as MCP tools. **299 tools** covering all API categories.
+<p align="center">
+  <img src="https://img.shields.io/badge/Keycloak-REST_API-00B2B2?style=for-the-badge&logo=keycloak&logoColor=white" alt="Keycloak version">
+  <img src="https://img.shields.io/badge/MCP-Model_Context_Protocol-5A67D8?style=for-the-badge" alt="MCP">
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/github/license/paoloamato2/keycloak-mcp-server?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/github/stars/paoloamato2/keycloak-mcp-server?style=for-the-badge" alt="Stars">
+</p>
+
+<p align="center">
+  <strong>A comprehensive <a href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a> server that exposes the <a href="https://www.keycloak.org/docs-api/latest/rest-api/index.html">Keycloak Admin REST API</a> as typed MCP tools. 299 tools covering all API categories.</strong>
+</p>
+
+---
 
 ## Features
 
