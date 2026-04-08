@@ -1,0 +1,366 @@
+from . import EndpointDef, Param, REALM
+
+CLIENT_UUID = Param("client_uuid", "Client UUID")
+
+ENDPOINTS: list[EndpointDef] = [
+    # ── Clients CRUD ────────────────────────────────────────────────────
+    EndpointDef(
+        name="list_clients",
+        description="List all clients in the realm.",
+        method="GET",
+        path="/admin/realms/{realm}/clients",
+        path_params=[REALM],
+        query_params=[
+            Param("clientId", "Client ID filter", required=False),
+            Param(
+                "viewableOnly",
+                "Whether to return only viewable clients",
+                required=False,
+            ),
+            Param("first", "Pagination offset", required=False, param_type="integer"),
+            Param(
+                "max", "Maximum number of results", required=False, param_type="integer"
+            ),
+        ],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="create_client",
+        description="Create a new client in the realm.",
+        method="POST",
+        path="/admin/realms/{realm}/clients",
+        path_params=[REALM],
+        query_params=[],
+        body_param=Param("client_data", "Client representation", param_type="object"),
+    ),
+    EndpointDef(
+        name="get_client",
+        description="Get a client by UUID.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="update_client",
+        description="Update a client.",
+        method="PUT",
+        path="/admin/realms/{realm}/clients/{client_uuid}",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=Param("client_data", "Client representation", param_type="object"),
+    ),
+    EndpointDef(
+        name="delete_client",
+        description="Delete a client.",
+        method="DELETE",
+        path="/admin/realms/{realm}/clients/{client_uuid}",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Client Secret ───────────────────────────────────────────────────
+    EndpointDef(
+        name="get_client_secret",
+        description="Get the client secret for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/client-secret",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="generate_client_secret",
+        description="Generate a new secret for a client.",
+        method="POST",
+        path="/admin/realms/{realm}/clients/{client_uuid}/client-secret",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="invalidate_rotated_client_secret",
+        description="Invalidate the rotated secret for a client.",
+        method="DELETE",
+        path="/admin/realms/{realm}/clients/{client_uuid}/client-secret/rotated",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="get_rotated_client_secret",
+        description="Get the rotated secret for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/client-secret/rotated",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Default Client Scopes ───────────────────────────────────────────
+    EndpointDef(
+        name="list_client_default_scopes",
+        description="List default client scopes for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/default-client-scopes",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="add_client_default_scope",
+        description="Add a default client scope to a client.",
+        method="PUT",
+        path="/admin/realms/{realm}/clients/{client_uuid}/default-client-scopes/{client_scope_id}",
+        path_params=[REALM, CLIENT_UUID, Param("client_scope_id", "Client scope ID")],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="remove_client_default_scope",
+        description="Remove a default client scope from a client.",
+        method="DELETE",
+        path="/admin/realms/{realm}/clients/{client_uuid}/default-client-scopes/{client_scope_id}",
+        path_params=[REALM, CLIENT_UUID, Param("client_scope_id", "Client scope ID")],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Optional Client Scopes ──────────────────────────────────────────
+    EndpointDef(
+        name="list_client_optional_scopes",
+        description="List optional client scopes for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/optional-client-scopes",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="add_client_optional_scope",
+        description="Add an optional client scope to a client.",
+        method="PUT",
+        path="/admin/realms/{realm}/clients/{client_uuid}/optional-client-scopes/{client_scope_id}",
+        path_params=[REALM, CLIENT_UUID, Param("client_scope_id", "Client scope ID")],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="remove_client_optional_scope",
+        description="Remove an optional client scope from a client.",
+        method="DELETE",
+        path="/admin/realms/{realm}/clients/{client_uuid}/optional-client-scopes/{client_scope_id}",
+        path_params=[REALM, CLIENT_UUID, Param("client_scope_id", "Client scope ID")],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Evaluate Scopes ─────────────────────────────────────────────────
+    EndpointDef(
+        name="generate_example_access_token",
+        description="Generate an example access token for evaluating client scopes.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/evaluate-scopes/generate-example-access-token",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[
+            Param("scope", "Scope to evaluate", required=False),
+            Param("user_id", "ID of the user", required=False),
+        ],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="generate_example_id_token",
+        description="Generate an example ID token for evaluating client scopes.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/evaluate-scopes/generate-example-id-token",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[
+            Param("scope", "Scope to evaluate", required=False),
+            Param("user_id", "ID of the user", required=False),
+        ],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="generate_example_userinfo",
+        description="Generate example userinfo for evaluating client scopes.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/evaluate-scopes/generate-example-userinfo",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[
+            Param("scope", "Scope to evaluate", required=False),
+            Param("user_id", "ID of the user", required=False),
+        ],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="get_client_evaluated_protocol_mappers",
+        description="Get evaluated protocol mappers for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/evaluate-scopes/protocol-mappers",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[
+            Param("scope", "Scope to evaluate", required=False),
+        ],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="get_client_granted_scope_mappings",
+        description="Get granted scope mappings for a client by role container.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/evaluate-scopes/scope-mappings/{role_container_id}/granted",
+        path_params=[
+            REALM,
+            CLIENT_UUID,
+            Param("role_container_id", "Role container ID"),
+        ],
+        query_params=[
+            Param("scope", "Scope to evaluate", required=False),
+        ],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="get_client_not_granted_scope_mappings",
+        description="Get not-granted scope mappings for a client by role container.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/evaluate-scopes/scope-mappings/{role_container_id}/not-granted",
+        path_params=[
+            REALM,
+            CLIENT_UUID,
+            Param("role_container_id", "Role container ID"),
+        ],
+        query_params=[
+            Param("scope", "Scope to evaluate", required=False),
+        ],
+        body_param=None,
+    ),
+    # ── Installation Provider ───────────────────────────────────────────
+    EndpointDef(
+        name="get_client_installation_provider",
+        description="Get the installation provider configuration for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/installation/providers/{provider_id}",
+        path_params=[
+            REALM,
+            CLIENT_UUID,
+            Param("provider_id", "Installation provider ID"),
+        ],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Management Permissions ──────────────────────────────────────────
+    EndpointDef(
+        name="get_client_management_permissions",
+        description="Get management permissions for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/management/permissions",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="update_client_management_permissions",
+        description="Update management permissions for a client.",
+        method="PUT",
+        path="/admin/realms/{realm}/clients/{client_uuid}/management/permissions",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=Param(
+            "permissions_data",
+            "Management permissions representation",
+            param_type="object",
+        ),
+    ),
+    # ── Cluster Nodes ───────────────────────────────────────────────────
+    EndpointDef(
+        name="unregister_client_cluster_node",
+        description="Unregister a cluster node from the client.",
+        method="DELETE",
+        path="/admin/realms/{realm}/clients/{client_uuid}/nodes/{node}",
+        path_params=[REALM, CLIENT_UUID, Param("node", "Node host name")],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="register_client_cluster_node",
+        description="Register a cluster node with the client.",
+        method="POST",
+        path="/admin/realms/{realm}/clients/{client_uuid}/nodes",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=Param(
+            "node_data", "Cluster node representation", param_type="object"
+        ),
+    ),
+    # ── Push Revocation ─────────────────────────────────────────────────
+    EndpointDef(
+        name="push_client_revocation_policy",
+        description="Push the revocation policy to all registered cluster nodes for the client.",
+        method="POST",
+        path="/admin/realms/{realm}/clients/{client_uuid}/push-revocation",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Registration Access Token ───────────────────────────────────────
+    EndpointDef(
+        name="get_client_registration_access_token",
+        description="Get the registration access token for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/registration-access-token",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    EndpointDef(
+        name="generate_client_registration_access_token",
+        description="Generate a new registration access token for a client.",
+        method="POST",
+        path="/admin/realms/{realm}/clients/{client_uuid}/registration-access-token",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Service Account User ────────────────────────────────────────────
+    EndpointDef(
+        name="get_client_service_account_user",
+        description="Get the service account user for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/service-account-user",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Session Count ───────────────────────────────────────────────────
+    EndpointDef(
+        name="get_client_session_count",
+        description="Get the number of active sessions for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/session-count",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── Test Nodes Available ────────────────────────────────────────────
+    EndpointDef(
+        name="test_client_nodes_available",
+        description="Test if registered cluster nodes for the client are available.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/test-nodes-available",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[],
+        body_param=None,
+    ),
+    # ── User Sessions ───────────────────────────────────────────────────
+    EndpointDef(
+        name="list_client_user_sessions",
+        description="List active user sessions for a client.",
+        method="GET",
+        path="/admin/realms/{realm}/clients/{client_uuid}/user-sessions",
+        path_params=[REALM, CLIENT_UUID],
+        query_params=[
+            Param("first", "Pagination offset", required=False, param_type="integer"),
+            Param(
+                "max", "Maximum number of results", required=False, param_type="integer"
+            ),
+        ],
+        body_param=None,
+    ),
+]
