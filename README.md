@@ -46,15 +46,30 @@
 | Users | 30 |
 | **Total** | **299** |
 
+
+## Demo
+
+*(Add a GIF or screenshot here demonstrating 3 real prompts and their executed tools!)*
+
 ## Installation
 
+### Option 1: Run directly with `uvx` (Recommended)
+You can run the server directly without manual installation using astral's `uv`:
 ```bash
-pip install -e .
+uvx keycloak-mcp-server
+```
+*(When using `uvx`, you can pass environment variables inline or keep them in your MCP config file.)*
+
+### Option 2: Install via pip
+If you prefer a global or virtual environment installation:
+```bash
+pip install git+https://github.com/paoloamato2/keycloak-mcp-server.git
 ```
 
-Or with [uv](https://docs.astral.sh/uv/):
-
+### Option 3: Install from source (For development)
 ```bash
+git clone https://github.com/paoloamato2/keycloak-mcp-server.git
+cd keycloak-mcp-server
 uv pip install -e .
 ```
 
@@ -152,6 +167,27 @@ python -m keycloak_mcp_server --transport sse --host 0.0.0.0 --port 8080
 # Using the entry point
 keycloak-mcp-server --transport sse --port 8080
 ```
+
+## Security & Production Recommendations
+
+⚠️ **SECURITY WARNING:** This MCP Server registers **all** Keycloak Admin REST API endpoints (299 tools), including sensitive write operations (like creating/deleting users, resetting passwords, and managing realms). **Do not use your master realm super-admin credentials in a production environment.**
+
+When attaching this MCP server to your AI Assistants, please strictly follow the **Principle of Least Privilege**:
+
+1. **Use Service Accounts (Client Credentials Flow)**:
+   Avoid using the Password flow (`KEYCLOAK_ADMIN_USERNAME` / `KEYCLOAK_ADMIN_PASSWORD`). Instead, create a dedicated Keycloak Client with Service Accounts Enabled, and use the `KEYCLOAK_CLIENT_ID` and `KEYCLOAK_CLIENT_SECRET`.
+
+2. **Limit Target Realms**:
+   Do not attach the server to the `master` realm unless specifically necessary. Point `KEYCLOAK_ADMIN_REALM` to the exact realm your AI assistant should manage.
+
+3. **Grant Only Required Roles**:
+   Only assign the minimum necessary roles to your MCP Service Account.
+   * If your LLM only needs to **read** data: Assign only `view-users`, `view-clients`, or `view-realm`.
+   * If your LLM needs to **manage** users: Assign only `manage-users`.
+   * *Never* assign `admin` or `realm-admin` roles to the AI unless you are fully aware of the risks.
+
+4. **Always Verify SSL**:
+   Keep `KEYCLOAK_VERIFY_SSL=true` enabled in production to prevent Man-in-the-Middle (MITM) attacks. Setting it to `false` is only acceptable for local development.
 
 ## Examples
 
